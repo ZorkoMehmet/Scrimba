@@ -1,36 +1,27 @@
-let myLeads = []
+let products = []
+
 const inputEl = document.getElementById("input-el")
 const inputBtn = document.getElementById("input-btn")
 const ulEl = document.getElementById("ul-el")
 const deleteBtn = document.getElementById("delete-btn")
-const leadsFromLocalStorage = JSON.parse( localStorage.getItem("myLeads") )
+const leadsFromLocalStorage = JSON.parse( localStorage.getItem("products") )
 const tabBtn = document.getElementById("tab-btn")
 
 if (leadsFromLocalStorage) {
-    myLeads = leadsFromLocalStorage
-    render(myLeads)
+    products = leadsFromLocalStorage
+    render(products)
 }
 
-const tabs = [
-    {url: "https://www.linkedin.com/in/per-harald-borgen/"}
-]
-
-
-tabBtn.addEventListener("click", function(){
-    // chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    // })
-    
+tabBtn.addEventListener("click", function(){    
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-        console.log(tabs)
-        
-        
+        products.push(tabs[0].url)
+        localStorage.setItem("products", JSON.stringify(products) )
+        render(products)
     })
-    
-    myLeads.push(tabs[0].url)
-    localStorage.setItem("myLeads", JSON.stringify(myLeads) )
-    render(myLeads)
-    
 })
+
+let url = "https://www.amazon.ca/Sponge-Bottle-Brush-Pack-Blue/dp/B07DQQFP63/ref=pd_day0fbt_img_sccl_2/135-2216868-0547034?pd_rd_w=hioy6&content-id=amzn1.sym.2788fe34-0865-4f82-b5fb-522b9cf2f5fd&pf_rd_p=2788fe34-0865-4f82-b5fb-522b9cf2f5fd&pf_rd_r=02HTF0WGY43Y894PN7W1&pd_rd_wg=oUKN6&pd_rd_r=b08549df-cf72-4e5d-84dd-695c9bf3dd48&pd_rd_i=B07DQQFP63&psc=1"
+console.log(url.split('/')[5]); 
 
 function render(leads) {
     let listItems = ""
@@ -48,13 +39,13 @@ function render(leads) {
 
 deleteBtn.addEventListener("dblclick", function() {
     localStorage.clear()
-    myLeads = []
-    render(myLeads)
+    products = []
+    render(products)
 })
 
 inputBtn.addEventListener("click", function() {
-    myLeads.push(inputEl.value)
+    products.push(inputEl.value)
     inputEl.value = ""
-    localStorage.setItem("myLeads", JSON.stringify(myLeads) )
-    render(myLeads)
+    localStorage.setItem("products", JSON.stringify(products) )
+    render(products)
 })
